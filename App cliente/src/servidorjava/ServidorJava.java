@@ -2,12 +2,18 @@ package servidorjava;
 
 import java.net.*;
 import java.io.*; 
+import java.awt.Desktop;
+import java.net.URI;
+import java.net.URISyntaxException; 
+import AppCliente.AppCliente;
+import java.net.UnknownHostException;
 
-
-
-public class ServidorJava
+public class ServidorJava 
 {
+    String ultimo;
+    AppCliente tcpcliente;
     // Se inicializa el puerto, en este caso sera el 8000
+  
   int puerto = 8000;
   
   //Un metodo para retornar mensajes del servidor
@@ -16,10 +22,11 @@ public class ServidorJava
     System.out.println("Mensaje: " + mensaje);
   }
   
-  public static void main(String[] array)
+  public static void main(String[] array) throws UnknownHostException,IOException
   {
     //Primero se verifica si el archivo existe
     try{
+        
         String basePath = new File("").getAbsolutePath();
         File archivo = new File(basePath+ "/contactos.txt");
         if(archivo.exists()){
@@ -58,11 +65,34 @@ public class ServidorJava
         // Se abre el host en el puerto 8000 esperando que un cliente llegue
       ServerSocket s = new ServerSocket(8000);
       MensajeServidor("Esperando Conexion......");
+      String url = "http://localhost:8000";
+
+        if(Desktop.isDesktopSupported()){
+            Desktop desktop = Desktop.getDesktop();
+            try {
+                desktop.browse(new URI(url));
+            } catch (IOException | URISyntaxException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }else{
+            Runtime runtime = Runtime.getRuntime();
+            try {
+                runtime.exec("xdg-open " + url);
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+      //tcpcliente= new AppCliente();
+      tcpcliente = new AppCliente();
+      Thread t = new Thread(tcpcliente);
+      t.start();
       while(true)
       {
         Socket cliente = s.accept();
         //Se instancia un cliente, y se inicia en su respectivo thread con la clase start.
-        Peticion pCliente = new Peticion(cliente);
+        Peticion pCliente = new Peticion(cliente,tcpcliente);
         pCliente.start();
       }
     }

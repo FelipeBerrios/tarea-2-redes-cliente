@@ -3,7 +3,7 @@ package servidorjava;
 import java.net.*;
 import java.io.*; 
 import java.util.*;
-
+import AppCliente.AppCliente;
 
 //la clase Peticion extiende a la clase thread
 public class Peticion extends Thread
@@ -16,11 +16,13 @@ public class Peticion extends Thread
   //una variable cliente, que representa al socket del cliente y uno para manejar la response del mensaje.
   private Socket cliente = null;
   private PrintWriter salida = null;
+  AppCliente tcpcliente;
   
-  Peticion(Socket clienteExt)
+  Peticion(Socket clienteExt,AppCliente tcpcliente)
   {
     //Recordar que le pasamos un socket al constructor
     cliente = clienteExt;
+    this.tcpcliente=tcpcliente;
     //setPriority(4);
   }
   
@@ -166,6 +168,7 @@ public class Peticion extends Thread
 
         String linea="" ;
         String lista="<ul class=\" nav nav-sidebar\">";
+        String textarea= "<textarea class=\"form-control\" rows=\"5\" name=\"chat\" id=\"chat\" readonly=\"readonly\">";
         //Aqui se va imprimiendo en el cuerpo del mensaje de respuesta.
         do
         {
@@ -177,6 +180,20 @@ public class Peticion extends Thread
               //Si el archivo es contactos, se crea una lista que se mostrara,
               //a partir del archivo contactos.html que esta pre creado con la lista.
               if(archivo.startsWith("contactos.html")){
+                if(linea.indexOf (textarea) != -1){
+                      tcpcliente.EnviarMensaje("RETORNAR "+ tcpcliente.IP);
+                      String ult=tcpcliente.PedirUltimo();
+                      
+                      while(!ult.startsWith("END")){
+                          ult=tcpcliente.PedirUltimo();
+                          System.out.println(ult);
+                        
+                      }
+                      ult= ult.substring(3);
+                      salida.println(ult);
+                      
+                
+                }
                 if(linea.indexOf (lista) != -1){
                     String actual="";
                     StringTokenizer st = new StringTokenizer(nombres,"-");
@@ -209,6 +226,7 @@ public class Peticion extends Thread
     del request en el post, hay que ver el content.length y luego leer los bytes especificos
     esta es una de las formas para reconocer las variables en el mensaje.
     */
+      String archivo2 = archivo.substring(1);
     int contentLength = -1; //Se inicia el largo en 1
     String contentL = "Content-Length: "; //cuando encuentre esta secuencia en el mensaje, lo partira para obtener los bytes.
     String cadena="" ;
@@ -233,6 +251,7 @@ public class Peticion extends Thread
         mensaje.read(content);
         String cadvariables=new String(content);
         //Se inician las variables de escritura de archivos.
+        if(archivo2.equals("agregar.html")){
         FileWriter archivoContactos;
         PrintWriter pw ;
         archivoContactos = new FileWriter("contactos.txt",true);
@@ -263,7 +282,19 @@ public class Peticion extends Thread
         }
         //Cerramos el archivo.
         pw.close();
-        
+        }
+        if(archivo2.equals("contactos.html")){
+                int x;
+                String[] arrayvariables=cadvariables.split("&");
+                for(x=0;x<arrayvariables.length;x++){
+                    String[] par=arrayvariables[x].split("=");
+                    if(par[0].equals("mensaje")){
+                        par[1]=par[1].replace("+"," ");
+                        String mensajeenviar= "MSG "+tcpcliente.IP+" "+tcpcliente.IP+" "+par[1]; 
+                        tcpcliente.EnviarMensaje(mensajeenviar);
+                    }
+                }
+        }
     
     }
     catch (IOException| NullPointerException e)
