@@ -13,8 +13,8 @@ public class ServidorJava
     String ultimo;
     AppCliente tcpcliente;
     // Se inicializa el puerto, en este caso sera el 8000
-  
-  int puerto = 8000;
+   
+  static int  puerto = (int)(Math.random()*(8080-8000+1)+8000);
   
   //Un metodo para retornar mensajes del servidor
   void MensajeServidor(String mensaje)
@@ -24,6 +24,7 @@ public class ServidorJava
   
   public static void main(String[] array) throws UnknownHostException,IOException
   {
+      puerto = (int)(Math.random()*(8080-8000+1)+8000);
     //Primero se verifica si el archivo existe
     try{
         
@@ -62,10 +63,10 @@ public class ServidorJava
     MensajeServidor("Servidor Iniciado");
     try
     {
-        // Se abre el host en el puerto 8000 esperando que un cliente llegue
-      ServerSocket s = new ServerSocket(8000);
+        // Se abre el host en el puerto  esperando que un cliente llegue
+      ServerSocket s = new ServerSocket(puerto);
       MensajeServidor("Esperando Conexion......");
-      String url = "http://localhost:8000";
+      String url = "http://localhost:"+puerto;
 
         if(Desktop.isDesktopSupported()){
             Desktop desktop = Desktop.getDesktop();
@@ -84,7 +85,7 @@ public class ServidorJava
                 e.printStackTrace();
             }
         }
-      //tcpcliente= new AppCliente();
+      
       tcpcliente = new AppCliente();
       Thread t = new Thread(tcpcliente);
       t.start();

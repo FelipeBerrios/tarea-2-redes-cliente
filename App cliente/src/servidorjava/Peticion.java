@@ -169,6 +169,7 @@ public class Peticion extends Thread
         String linea="" ;
         String lista="<ul class=\" nav nav-sidebar\">";
         String textarea= "<textarea class=\"form-control\" rows=\"5\" name=\"chat\" id=\"chat\" readonly=\"readonly\">";
+        String  estadonick="<p id=\"estado\">";
         //Aqui se va imprimiendo en el cuerpo del mensaje de respuesta.
         do
         {
@@ -181,7 +182,7 @@ public class Peticion extends Thread
               //a partir del archivo contactos.html que esta pre creado con la lista.
               if(archivo.startsWith("contactos.html")){
                 if(linea.indexOf (textarea) != -1){
-                      tcpcliente.EnviarMensaje("RETORNAR "+ tcpcliente.IP);
+                      tcpcliente.EnviarMensaje("RETORNAR "+ tcpcliente.IP +" "+tcpcliente.nick);
                       String ult=tcpcliente.PedirUltimo();
                       
                       while(!ult.startsWith("END")){
@@ -189,9 +190,10 @@ public class Peticion extends Thread
                           System.out.println(ult);
                         
                       }
-                      ult= ult.substring(3);
-                      salida.println(ult);
-                      
+                      if(!ult.endsWith("END")){
+                        ult= ult.substring(3);
+                        salida.println(ult);
+                      }
                 
                 }
                 if(linea.indexOf (lista) != -1){
@@ -201,7 +203,16 @@ public class Peticion extends Thread
                         salida.println("<li ><a href=\"#\">"+st.nextToken()+"</a></li>");
                     }
                 }
-              }  
+              }
+              if(archivo.startsWith("index.html")){
+                  if(linea.indexOf (estadonick) != -1){
+                     
+                    if(tcpcliente.nick.equals("")) 
+                    salida.println("Ingresa nick para ingresar al chat");
+                    else if(tcpcliente.nick.equals("ENUSO")) salida.println("NICK ingresado en uso o no valido, intente denuevo");
+                    else salida.println("NICK ingresado con exito");
+                 }
+              }
           }
         } while (linea != null);
         MensajeServidor("Archivo enviado");
@@ -252,6 +263,7 @@ public class Peticion extends Thread
         String cadvariables=new String(content);
         //Se inician las variables de escritura de archivos.
         if(archivo2.equals("agregar.html")){
+            System.out.println("jajaj");
         FileWriter archivoContactos;
         PrintWriter pw ;
         archivoContactos = new FileWriter("contactos.txt",true);
@@ -290,8 +302,35 @@ public class Peticion extends Thread
                     String[] par=arrayvariables[x].split("=");
                     if(par[0].equals("mensaje")){
                         par[1]=par[1].replace("+"," ");
-                        String mensajeenviar= "MSG "+tcpcliente.IP+" "+tcpcliente.IP+" "+par[1]; 
+                        String [] dest= par[1].split(" ",2);
+                        System.out.println("aca toy:"+ tcpcliente.nick);
+                        String mensajeenviar= "MSG "+tcpcliente.IP+" "+tcpcliente.IP+" '"+dest[1]+"' "+dest[0]+" "+tcpcliente.nick; 
+                        //String mensajeenviar= "MSG "+"192.168.1.5"+" "+tcpcliente.IP+" "+par[1]; 
                         tcpcliente.EnviarMensaje(mensajeenviar);
+                    }
+                }
+        }
+        if(archivo2.equals("index.html")){
+            int x;
+            
+                String[] arrayvariables=cadvariables.split("&");
+                for(x=0;x<arrayvariables.length;x++){
+                    String[] par=arrayvariables[x].split("=");
+                    if(par[0].equals("usr")){
+                        par[1]=par[1].replace("+"," "); 
+                        tcpcliente.EnviarMensaje("NICK " +par[1] +" "+tcpcliente.IP);
+                        String estado=tcpcliente.PedirNick();
+                        while(!tcpcliente.nickver.equals("NICKEND")){
+                            estado=tcpcliente.PedirNick();
+                        }
+                        String nick=tcpcliente.nick;
+                        if(nick.equals("OK")){
+                            tcpcliente.nick=par[1];
+                        }
+                        if(nick.equals("ENUSO")){
+                            tcpcliente.nick="ENUSO";
+                        }
+                        System.out.println(tcpcliente.nick);
                     }
                 }
         }

@@ -31,11 +31,11 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="http://localhost:8000/index.html">Inicio</a>
+          <a class="navbar-brand" href="index.html">Inicio</a>
         </div>
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="http://localhost:8000/contactos.html">Lista Contactos</a></li>
+            <li class="active"><a href="contactos.html">Lista Contactos</a></li>
             <li><a href="#about">Edicion</a></li>
             <li><a href="#contact">Eliminacion</a></li>
           </ul>
@@ -47,12 +47,15 @@
         <h1>Bienvenido al sistema de contactos</h1>
       <p style="margin-left: 40%">
 
-        <a href="http://localhost:8000/agregar.html" class="btn btn-primary btn-lg " role="button">Agregar</a>
-        <a href="http://localhost:8000/contactos.html" class="btn btn-primary btn-lg " role="button">Ver contactos</a>
+        <a href="agregar.html" class="btn btn-primary btn-lg " role="button">Agregar</a>
+        <a href="contactos.html" class="btn btn-primary btn-lg " role="button">Ver contactos</a>
       <p>
-          <form action="#">
+          <form action="index.html" method="POST">
           <input type="text" id="usr" name="usr">usuario
           <button type="submit">Login</button>
+          <p id="estado">
+            
+          </p>
 
 
         </form>
