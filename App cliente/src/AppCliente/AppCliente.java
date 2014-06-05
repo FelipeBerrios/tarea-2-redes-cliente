@@ -18,10 +18,13 @@ import java.net.InetAddress;
 public class AppCliente implements Runnable {
     Socket server;
     private BufferedReader in = null;
-    public String ultimo="";
-    public String nickver="";
+    
     public String nick="";
-    private static int port = 1001; /* port to connect to */
+    public String controllogin="";
+    public String controlagregar="";
+    public String controlcontactos="";
+    public String respuesta="";
+    public  int port = 1001; /* port to connect to */
     private static String host = "localhost"; /* host to connect to */
     public String IP;
  
@@ -37,51 +40,33 @@ public class AppCliente implements Runnable {
         
     }
     
-    
+ public String  recibirrespuesta() throws IOException{
+     return this.respuesta;
+ }
+
  
   public void  EnviarMensaje(String msg) throws IOException{
-      ultimo="";
-      nickver="";
+      controllogin="";
+      controlagregar="";
+      respuesta="";
       PrintWriter out = new PrintWriter(this.server.getOutputStream(), true);
       out.println(msg);
   }
-  public String PedirUltimo(){
-      return this.ultimo;
-  }
-  public String  PedirNick(){
-      return this.nickver;
-  }
   
   
   
+  @Override
   public void run() {
         
         String msg;
         try {
-            
-            /* loop reading messages from the server and show them 
-             * on stdout */
             while ((msg = in.readLine()) != null) {
-                if(msg.startsWith("-") ){
-                    ultimo+="\r\n"+msg;
+                    if(!msg.equals("")){
+                        this.respuesta=msg;
+                    }
                     
-                }
-                if(msg.startsWith("END")){
-                    ultimo="END "+ultimo;
-                    
-                }
-                if(msg.startsWith("OK")){
-                    nick="OK";
-                    
-                }
-                if(msg.startsWith("ENUSO")){
-                    nick="ENUSO";
-                }
-                if(msg.startsWith("NICKEND")){
-                    nickver="NICKEND";
-                }
+             
             }
-            
         } catch (IOException e) {
             System.err.println(e);
         }

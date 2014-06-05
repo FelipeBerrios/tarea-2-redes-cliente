@@ -25,6 +25,7 @@ public class ServidorJava
   public static void main(String[] array) throws UnknownHostException,IOException
   {
       puerto = (int)(Math.random()*(8080-8000+1)+8000);
+      System.out.println(puerto);
     //Primero se verifica si el archivo existe
     try{
         
