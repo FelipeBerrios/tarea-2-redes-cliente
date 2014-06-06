@@ -86,7 +86,7 @@ public class ServidorJava
                 e.printStackTrace();
             }
         }
-      
+      /* Se crea un cliente, con su respectivo metodo run*/
       tcpcliente = new AppCliente();
       Thread t = new Thread(tcpcliente);
       t.start();

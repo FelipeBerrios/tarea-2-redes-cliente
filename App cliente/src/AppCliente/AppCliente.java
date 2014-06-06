@@ -31,7 +31,7 @@ public class AppCliente implements Runnable {
     private static String minick;
  
     
-    
+    /* Se crea el constructor, creando un buffer de lectura*/
     public AppCliente() throws UnknownHostException, IOException{
         this.IP = InetAddress.getLocalHost().getHostAddress();
         this.server = new Socket("localhost", port);
@@ -40,10 +40,8 @@ public class AppCliente implements Runnable {
         
     }
     
- public String  recibirrespuesta() throws IOException{
-     return this.respuesta;
- }
 
+/* Metodo para enviar mensajes al servidor */
  
   public void  EnviarMensaje(String msg) throws IOException{
       controllogin="";
@@ -54,7 +52,7 @@ public class AppCliente implements Runnable {
   }
   
   
-  
+  /* metodo run que lee respuestas desde el servidor*/
   @Override
   public void run() {
         

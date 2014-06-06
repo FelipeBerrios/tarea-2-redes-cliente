@@ -234,6 +234,9 @@ public class Peticion extends Thread
                     else if(tcpcliente.controlcontactos.equals("ENVIADO")){
                         salida.println("Mensaje Enviado!");
                     }
+                    else if(tcpcliente.controlcontactos.equals("ESCRIBE")){
+                        salida.println("Escribe un mensaje porfavor");
+                    }
                     tcpcliente.controlcontactos="";
                     
                       
@@ -420,12 +423,13 @@ public class Peticion extends Thread
                 String nick="";
                 String ip="";
                 Boolean tiene=false;
-                Boolean marco=false;
+                Boolean escribio=false;
                 String[] arrayvariables=cadvariables.split("&");
                 for(x=0;x<arrayvariables.length;x++){
                     String[] par=arrayvariables[x].split("=");
                     
-                    if(par[0].equals("mensaje")){
+                    if(par[0].equals("mensaje") && par.length>1){
+                        escribio=true;
                         mensajec=par[1].replace("+"," ");
                         
                     }
@@ -442,11 +446,16 @@ public class Peticion extends Thread
                     
                 }
                 if(tiene){
-                    
-                        String mensajeenviar= "MSG "+ip+" "+tcpcliente.IP+" "+tcpcliente.nick+" "+nick+" "+mensajec; 
-                        //String mensajeenviar= "MSG "+"192.168.1.5"+" "+tcpcliente.IP+" "+par[1]; 
-                        tcpcliente.EnviarMensaje(mensajeenviar);
-                        tcpcliente.controlcontactos="ENVIADO";
+                        if(escribio){
+                            
+                            String mensajeenviar= "MSG "+ip+" "+tcpcliente.IP+" "+tcpcliente.nick+" "+nick+" "+mensajec; 
+                            //String mensajeenviar= "MSG "+"192.168.1.5"+" "+tcpcliente.IP+" "+par[1]; 
+                            tcpcliente.EnviarMensaje(mensajeenviar);
+                            tcpcliente.controlcontactos="ENVIADO";
+                        }
+                        else{
+                           tcpcliente.controlcontactos="ESCRIBE"; 
+                        }
                     
                 }
                 else tcpcliente.controlcontactos="NOTIENE";
