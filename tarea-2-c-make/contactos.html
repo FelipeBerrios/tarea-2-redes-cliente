@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <META HTTP-EQUIV="REFRESH" CONTENT="15;URL=contactos.html"> 
     <title>Contacto</title>
 
     <!-- Bootstrap -->
@@ -80,11 +81,11 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="http://localhost:8000/index.html">Inicio</a>
+          <a class="navbar-brand" href="index.html">Inicio</a>
         </div>
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="http://localhost:8000/contactos.html">Lista Contactos</a></li>
+            <li class="active"><a href="contactos.html">Lista Contactos</a></li>
             <li><a href="#about">Edicion</a></li>
             <li><a href="#contact">Eliminacion</a></li>
           </ul>
@@ -98,12 +99,28 @@
             
           </ul>
 
-          <a href="http://localhost:8000/agregar.html" class="btn btn-success btn-lg " role="button" style="margin-top: 50px">Agregar contacto</a>
+          <a href="agregar.html" class="btn btn-success btn-lg " role="button" style="margin-top: 50px">Agregar contacto</a>
 
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
             <h1 class="page-header">Contacto</h1>
+            <form class="form-horizontal" role="form" action="#" method ="post">
+              <div class="form-group">
+                <textarea class="form-control" rows="5" name="chat" id="chat" readonly="readonly">
+                  
+                </textarea>
+                <br>
+                <br>
+                <input type="text" name="mensaje" id="mensaje">
+                <button type="submit" class="btn btn-default">Submit</button>
+                <p id= "mensajecontactos">
+                  
+                </p>
+              </div>
+              
+            </form>
         </div>
+
       </div>
 
     </div>

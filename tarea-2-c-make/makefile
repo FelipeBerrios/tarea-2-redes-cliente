@@ -5,6 +5,7 @@ JC = javac
 	$(JC) $(JFLAGS) $*.java
 
 CLASSES = \
+	AppCliente.java\
 	Peticion.java \
         ServidorJava.java
 
