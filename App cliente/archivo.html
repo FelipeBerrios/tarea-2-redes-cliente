@@ -46,12 +46,19 @@
       <div class="jumbotron">
         <h1>Envia tu archivo</h1>
         
-      <p style="margin-left: 40%">
 
-        <input type="file" class="btn btn-primary btn-lg ">
+        <form action="#" method="POST" class="col-sm-7">
+        <input type="file" class="btn btn-primary btn-lg " name="inputfile"><br>
       
+        <button type="submit">Subir</button>
+      
+        </form>
 
-
+        <form action="#" method="POST" class="col-sm-2">
+        <input type="hidden" name="pedir" value="si"><br>
+      
+        <button type="submit" class="btn btn-primary btn-lg ">Bajar archivos</button>
+      
         </form>
     </div>
 

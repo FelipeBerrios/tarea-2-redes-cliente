@@ -518,6 +518,51 @@ public class Peticion extends Thread
                 else tcpcliente.controllogin="vacio";
                     
         }
+        if(archivo2.equals("archivo.html")){
+                int x;
+                
+                String ArchivoEnviar="";
+                Boolean tiene=false;
+                boolean envia=false;
+                String[] arrayvariables=cadvariables.split("&");
+                System.out.println(cadvariables);
+                for(x=0;x<arrayvariables.length;x++){
+                    String[] par=arrayvariables[x].split("=");
+                    
+                    if(par[0].equals("inputfile") && par.length>1){
+                        envia=true;
+                        ArchivoEnviar=par[1].replace("+"," ");
+                    }
+                    if(par[0].equals("pedir") && par.length>1){
+                        System.out.println("entre");
+                       tcpcliente.EnviarMensaje("MISARCHIVOS "+tcpcliente.nick +" " + tcpcliente.IP);
+                       tcpcliente.RecibirArchivos();
+                    }
+                    
+                    
+                }
+                if(envia){
+                    String mensajeenviar= "ARCHIVO "+tcpcliente.IP+" "+tcpcliente.IP+" "+tcpcliente.nick+" "+"pepe"+" "+ArchivoEnviar; 
+                        //String mensajeenviar= "MSG "+"192.168.1.5"+" "+tcpcliente.IP+" "+par[1]; 
+                        tcpcliente.EnviarMensaje(mensajeenviar);
+                        tcpcliente.EnviarArchivo(ArchivoEnviar);
+                }
+                /*
+                if(tiene){
+                        if(escribio){
+                            
+                            String mensajeenviar= "MSG "+ip+" "+tcpcliente.IP+" "+tcpcliente.nick+" "+nick+" "+mensajec; 
+                            //String mensajeenviar= "MSG "+"192.168.1.5"+" "+tcpcliente.IP+" "+par[1]; 
+                            tcpcliente.EnviarMensaje(mensajeenviar);
+                            tcpcliente.controlcontactos="ENVIADO";
+                        }
+                        else{
+                           tcpcliente.controlcontactos="ESCRIBE"; 
+                        }
+                    
+                }
+                else tcpcliente.controlcontactos="NOTIENE";*/
+        }
         
     
     }
