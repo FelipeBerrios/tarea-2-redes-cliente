@@ -291,6 +291,50 @@ public class Peticion extends Thread
                  }
                  
               }
+              if(archivo.startsWith("archivo.html")){
+                  if(linea.indexOf ("<form action=\"#\" method=\"POST\" class=\"col-sm-7\"><br><br>") != -1){
+                    tcpcliente.EnviarMensaje("MISCONTACTOS "+tcpcliente.nick);
+                      
+                      while(tcpcliente.respuesta.equals("")){
+                            System.out.println();
+                      }
+                      System.out.println(tcpcliente.respuesta);
+                      String[] msg_parts = tcpcliente.respuesta.split(" ",2);
+                      String contactos= msg_parts[1];
+                      StringTokenizer aux1= new StringTokenizer(contactos,"&&");
+                      while(aux1.hasMoreTokens()){
+                          String aux2=aux1.nextToken();
+                          salida.println("<input type='radio' name='contactos' value='"+aux2+"'>"+aux2+"<br>");
+                          
+                      }
+                      
+                }
+                if(linea.indexOf ("<p id=\"enviararchivo\">") != -1){
+                    if(tcpcliente.controlarchivos.equals("NOTIENE")){
+                        salida.println("Para enviar archivos selecciona un contacto");
+                        
+                    }
+                    else if(tcpcliente.controlarchivos.equals("NOARCHIVO")){
+                        salida.println("Selecciona un archivo");
+                    }
+                    else if(tcpcliente.controlarchivos.equals("ENVIADO")){
+                        salida.println("Archivo Enviado");
+                    }
+                    tcpcliente.controlarchivos="";
+                    
+                      
+                }
+                if(linea.indexOf ("<p id=\"recibirarchivo\">") != -1){
+                    if(tcpcliente.controlarchivosr.equals("RECIBIR")){
+                        salida.println("Archivos Recibidos");
+                        
+                    }
+                    
+                    tcpcliente.controlarchivosr="";
+                    
+                      
+                }
+              }
           }
         } while (linea != null);
         
@@ -342,36 +386,7 @@ public class Peticion extends Thread
         String cadvariables=new String(content);
         //Se inician las variables de escritura de archivos.
         if(archivo2.equals("agregar.html")){
-            /*FileWriter archivoContactos;
-            PrintWriter pw ;
-            archivoContactos = new FileWriter("contactos.txt",true);
-            pw = new PrintWriter(archivoContactos);
-            int i;
-            //Recordar que viene en formato var1=valor1&var2=valor2...
-            //se separan por el caracter &.
-            String[] arrayvariables=cadvariables.split("&");
-            //Se crea un arreglo con el numero de variables.
-            for(i=0;i<arrayvariables.length;i++){
-                //Ahora se separan en parejas variable-valor
-                String[] par=arrayvariables[i].split("=");
-                par[1]=par[1].replace("+"," ");
-                // se reconocen 3 casos: 0 para nombre; 1 para ip y 2 para puerto.
-                switch (i){
-                    case 0:
-                        pw.print(par[1]+" - ");
-                        break;
-                    case 1:
-                        pw.print("\t\t\t"+par[1]+" - ");
-                        break;
-                    case 2:
-                        pw.println("\t\t\t"+par[1]);
-                        break;
-                }
-
-
-            }
-            //Cerramos el archivo.
-            pw.close();*/
+            
             int x;
                 String nick="";
                 String ip="";
@@ -524,6 +539,9 @@ public class Peticion extends Thread
                 String ArchivoEnviar="";
                 Boolean tiene=false;
                 boolean envia=false;
+                boolean bajar=false;
+                String nick="";
+                String ip="";
                 String[] arrayvariables=cadvariables.split("&");
                 System.out.println(cadvariables);
                 for(x=0;x<arrayvariables.length;x++){
@@ -533,35 +551,38 @@ public class Peticion extends Thread
                         envia=true;
                         ArchivoEnviar=par[1].replace("+"," ");
                     }
+                    if(par[0].equals("contactos") && par.length>1){
+                        tiene=true;
+                        String[] msg_parts=par[1].split("%3A",2);
+                            nick=msg_parts[0];
+                            ip=msg_parts[1];
+                        
+                    }
                     if(par[0].equals("pedir") && par.length>1){
-                        System.out.println("entre");
+                       bajar=true;
                        tcpcliente.EnviarMensaje("MISARCHIVOS "+tcpcliente.nick +" " + tcpcliente.IP);
                        tcpcliente.RecibirArchivos();
+                       tcpcliente.controlarchivosr="RECIBIR";
                     }
                     
                     
                 }
-                if(envia){
-                    String mensajeenviar= "ARCHIVO "+tcpcliente.IP+" "+tcpcliente.IP+" "+tcpcliente.nick+" "+"pepe"+" "+ArchivoEnviar; 
-                        //String mensajeenviar= "MSG "+"192.168.1.5"+" "+tcpcliente.IP+" "+par[1]; 
-                        tcpcliente.EnviarMensaje(mensajeenviar);
-                        tcpcliente.EnviarArchivo(ArchivoEnviar);
-                }
-                /*
-                if(tiene){
-                        if(escribio){
-                            
-                            String mensajeenviar= "MSG "+ip+" "+tcpcliente.IP+" "+tcpcliente.nick+" "+nick+" "+mensajec; 
+                if(tiene && !bajar){
+                    if(envia && !bajar){
+                        String mensajeenviar= "ARCHIVO "+ip+" "+tcpcliente.IP+" "+tcpcliente.nick+" "+nick+" "+ArchivoEnviar; 
                             //String mensajeenviar= "MSG "+"192.168.1.5"+" "+tcpcliente.IP+" "+par[1]; 
                             tcpcliente.EnviarMensaje(mensajeenviar);
-                            tcpcliente.controlcontactos="ENVIADO";
-                        }
-                        else{
-                           tcpcliente.controlcontactos="ESCRIBE"; 
-                        }
-                    
+                            tcpcliente.EnviarArchivo(ArchivoEnviar);
+                            tcpcliente.controlarchivos="ENVIADO";
+                    }
+                    else{
+                        tcpcliente.controlarchivos="NOARCHIVO";
+                    }
                 }
-                else tcpcliente.controlcontactos="NOTIENE";*/
+                else{
+                    tcpcliente.controlarchivos="NOTIENE";
+                }
+                
         }
         
     

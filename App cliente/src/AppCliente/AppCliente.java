@@ -30,6 +30,8 @@ public class AppCliente implements Runnable {
     public String controllogin="";
     public String controlagregar="";
     public String controlcontactos="";
+    public String controlarchivos="";
+    public String controlarchivosr="";
     public String respuesta="";
     public  int port = 1001; /* port to connect to */
     private static String host = "localhost"; /* host to connect to */
@@ -89,7 +91,7 @@ public class AppCliente implements Runnable {
           // receive file
           byte [] mybytearray  = new byte [FILE_SIZE];
           InputStream is = sock.getInputStream();
-          fos = new FileOutputStream("C:\\Users\\felipe\\Pictures\\oli.jpg");
+          fos = new FileOutputStream("retornado.jpg");
           bos = new BufferedOutputStream(fos);
           bytesRead = is.read(mybytearray,0,mybytearray.length);
           current = bytesRead;
@@ -102,7 +104,7 @@ public class AppCliente implements Runnable {
 
           bos.write(mybytearray, 0 , current);
           bos.flush();
-          System.out.println("File " + "C:\\Users\\felipe\\Pictures\\oli.jpg"
+          System.out.println("Files "
               + " downloaded (" + current + " bytes read)");
         }
         finally {
